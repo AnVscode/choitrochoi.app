@@ -45,12 +45,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       >
         <Analytics />
         <SpeedInsights />
-        <SplashScreen>
-          {children}
-          <div className="mt-2 flex justify-center bg-slate-300">
-            beta version
-          </div>
-        </SplashScreen>
+        <SplashScreen>{children}</SplashScreen>
       </body>
     </html>
   );

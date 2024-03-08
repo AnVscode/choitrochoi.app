@@ -1,5 +1,7 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import { Badge } from "@/components/ui/badge";
+import CheckOS from "./home/components/check-os";
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -7,14 +9,19 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
-    <div>
-      <div className="bg-slate-500">
+    <>
+      <CheckOS />
+      <div>
+        <div className="flex justify-end">
+          <Badge variant="secondary">Beta</Badge>
+        </div>
+
         <Header />
+        {children}
+        <div className="bg-slate-500">
+          <Footer />
+        </div>
       </div>
-      {children}
-      <div className="bg-slate-500">
-        <Footer />
-      </div>
-    </div>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-type OperatingSystem = "Windows" | "MacOS" | "iOS" | "Android" | "Linux" | null;
+type OperatingSystem = "Windows" | "MacOS" | "Ios" | "Android" | "Linux" | null;
 
 export function useOS(): OperatingSystem {
   const [operatingSystem, setOperatingSystem] = useState<OperatingSystem>(null);
@@ -14,7 +14,7 @@ export function useOS(): OperatingSystem {
     } else if (userAgent.match(/Macintosh|MacIntel|MacPPC|Mac68K/i)) {
       os = "MacOS";
     } else if (userAgent.match(/iPhone|iPad|iPod/i)) {
-      os = "iOS";
+      os = "Ios";
     } else if (userAgent.match(/Android/i)) {
       os = "Android";
     } else if (userAgent.match(/Linux/i)) {

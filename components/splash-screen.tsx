@@ -34,34 +34,34 @@ export default function SplashScreen({ children }: SplashScreenProps) {
       delay: anime.stagger(200, { grid: [14, 5], from: "center" }),
     });
 
-    loader.add({
-      targets: sloganRef.current,
-      keyframes: [
-        // up
-        { translateY: -40 },
-        { translateY: 0 },
-        // left
-        { translateX: -20 },
-        { translateX: 0 },
-        // right
-        { translateX: 20 },
-        { translateX: 0 },
-        // down
-        { translateY: 20 },
-        { translateY: 0 },
-      ],
+    // loader.add({
+    //   targets: sloganRef.current,
+    //   keyframes: [
+    //     // up
+    //     { translateY: -40 },
+    //     { translateY: 0 },
+    //     // left
+    //     { translateX: -20 },
+    //     { translateX: 0 },
+    //     // right
+    //     { translateX: 20 },
+    //     { translateX: 0 },
+    //     // down
+    //     { translateY: 20 },
+    //     { translateY: 0 },
+    //   ],
 
-      scale: {
-        value: 1,
-        duration: 1000,
-        delay: 0,
-        easing: "easeInOutQuad",
-      },
+    //   scale: {
+    //     value: 1,
+    //     duration: 1000,
+    //     delay: 0,
+    //     easing: "easeInOutQuad",
+    //   },
 
-      duration: 5000,
-      easing: "easeOutElastic(1, .8)",
-      loop: true,
-    });
+    //   duration: 5000,
+    //   easing: "easeOutElastic(1, .8)",
+    //   loop: true,
+    // });
   }, [push]);
 
   useEffect(() => {
@@ -83,19 +83,12 @@ export default function SplashScreen({ children }: SplashScreenProps) {
   return (
     <div>
       {isLoading ? (
-        <div className="flex h-screen items-center justify-center">
-          <video
-            src="/videos/Neon.webm"
-            loop
-            muted
-            autoPlay
-            className="relative h-screen w-screen object-cover"
-          />
+        <div className="flex h-screen items-center justify-center bg-slate-800">
           <div
             ref={sloganRef}
-            className="absolute flex h-[250px] w-[250px] items-center justify-center rounded-full bg-white p-16 text-center text-5xl shadow-2xl"
+            className="flex h-[250px] w-[250px] items-center justify-center rounded-full bg-background p-16 text-center text-5xl shadow-2xl"
           >
-            Beta Version
+            Beta
           </div>
         </div>
       ) : (
