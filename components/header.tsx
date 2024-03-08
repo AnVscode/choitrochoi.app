@@ -5,9 +5,15 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
+type menuContent = {
+  id: number;
+  name: string;
+  router: string;
+}[];
+
 export default function Header() {
   const user: string = "choitrochoi";
-  const menuContent = [
+  const menuContent: menuContent = [
     {
       id: 1,
       name: "Đăng nhập",
