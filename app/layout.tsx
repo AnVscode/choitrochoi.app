@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
 import SplashScreen from "@/components/splash-screen";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const myFont = localFont({
   src: [
@@ -41,6 +43,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={cn("font-sans font-normal antialiased", myFont.variable)}
       >
+        <Analytics />
+        <SpeedInsights />
         <SplashScreen>
           {children}
           <div className="mt-2 flex justify-center bg-slate-300">
