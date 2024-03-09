@@ -1,23 +1,17 @@
 "use client";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import anime from "animejs";
-import { appRoute } from "@/lib/path-name";
+import { useSplashScreen } from "@/store/splash-screen";
+import Router from "next/router";
 
-interface SplashScreenProps {
-  readonly children?: React.ReactNode;
-}
-
-export default function SplashScreen({ children }: SplashScreenProps) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+export default function SplashScreen() {
+  const { setIsLoadingScreen, isLoadingScreen } = useSplashScreen();
   const sloganRef = useRef<HTMLDivElement>(null);
 
   const animate = () => {
     const loader = anime.timeline({
       complete: () => {
-        setIsLoading(false);
-        router.push(appRoute.home.router);
+        setIsLoadingScreen(false);
       },
     });
 
@@ -32,24 +26,39 @@ export default function SplashScreen({ children }: SplashScreenProps) {
   };
 
   useEffect(() => {
-    animate();
+    const handleStart = () => {
+      setIsLoadingScreen(true);
+    };
+    const handleComplete = () => {
+      setIsLoadingScreen(false);
+    };
+
+    Router.events.on("routeChangeStart", handleStart);
+    Router.events.on("routeChangeComplete", handleComplete);
+    Router.events.on("routeChangeError", handleStart);
+
+    return () => {
+      Router.events.off("routeChangeStart", handleStart);
+      Router.events.off("routeChangeComplete", handleComplete);
+      Router.events.off("routeChangeError", handleStart);
+    };
+  }, [setIsLoadingScreen]);
+
+  useEffect(() => {
+    if (isLoadingScreen) {
+      animate();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div>
-      {isLoading ? (
-        <div className="flex h-screen items-center justify-center bg-slate-800">
-          <div
-            ref={sloganRef}
-            className="flex h-[250px] w-[250px] items-center justify-center rounded-full bg-background p-16 text-center text-5xl shadow-2xl"
-          >
-            Beta
-          </div>
-        </div>
-      ) : (
-        <>{children}</>
-      )}
+    <div className="flex h-screen items-center justify-center bg-slate-800">
+      <div
+        ref={sloganRef}
+        className="flex h-[250px] w-[250px] items-center justify-center rounded-full bg-background p-16 text-center text-5xl shadow-2xl"
+      >
+        Beta
+      </div>
     </div>
   );
 }

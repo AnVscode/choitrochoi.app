@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
-import SplashScreen from "@/components/splash-screen";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -45,7 +44,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       >
         <Analytics />
         <SpeedInsights />
-        <SplashScreen>{children}</SplashScreen>
+        {children}
       </body>
     </html>
   );
