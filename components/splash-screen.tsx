@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import anime from "animejs";
 import { appRoute } from "@/lib/path-name";
 
@@ -9,19 +9,15 @@ interface SplashScreenProps {
 }
 
 export default function SplashScreen({ children }: SplashScreenProps) {
-  const { push } = useRouter();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const sloganRef = useRef<HTMLDivElement>(null);
 
-  const handleBeforeUnload = useCallback(() => {
-    localStorage.setItem("isReloading", "true");
-  }, []);
-
-  const animate = useCallback(() => {
+  const animate = () => {
     const loader = anime.timeline({
       complete: () => {
         setIsLoading(false);
-        push(appRoute.home.router);
+        router.push(appRoute.home.router);
       },
     });
 
@@ -33,52 +29,12 @@ export default function SplashScreen({ children }: SplashScreenProps) {
       ],
       delay: anime.stagger(200, { grid: [14, 5], from: "center" }),
     });
-
-    // loader.add({
-    //   targets: sloganRef.current,
-    //   keyframes: [
-    //     // up
-    //     { translateY: -40 },
-    //     { translateY: 0 },
-    //     // left
-    //     { translateX: -20 },
-    //     { translateX: 0 },
-    //     // right
-    //     { translateX: 20 },
-    //     { translateX: 0 },
-    //     // down
-    //     { translateY: 20 },
-    //     { translateY: 0 },
-    //   ],
-
-    //   scale: {
-    //     value: 1,
-    //     duration: 1000,
-    //     delay: 0,
-    //     easing: "easeInOutQuad",
-    //   },
-
-    //   duration: 5000,
-    //   easing: "easeOutElastic(1, .8)",
-    //   loop: true,
-    // });
-  }, [push]);
+  };
 
   useEffect(() => {
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [handleBeforeUnload]);
-
-  useEffect(() => {
-    if (localStorage && localStorage.getItem("isReloading") === "true") {
-      setIsLoading(true);
-      localStorage.removeItem("isReloading");
-    }
     animate();
-  }, [animate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
