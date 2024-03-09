@@ -1,27 +1,17 @@
 "use client";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import anime from "animejs";
-import { appRoute } from "@/lib/path-name";
+import { useSplashScreen } from "@/store/splash-screen";
+import Router from "next/router";
 
-interface SplashScreenProps {
-  readonly children?: React.ReactNode;
-}
-
-export default function SplashScreen({ children }: SplashScreenProps) {
-  const { push } = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+export default function SplashScreen() {
+  const { setIsLoadingScreen, isLoadingScreen } = useSplashScreen();
   const sloganRef = useRef<HTMLDivElement>(null);
 
-  const handleBeforeUnload = useCallback(() => {
-    localStorage.setItem("isReloading", "true");
-  }, []);
-
-  const animate = useCallback(() => {
+  const animate = () => {
     const loader = anime.timeline({
       complete: () => {
-        setIsLoading(false);
-        push(appRoute.home.router);
+        setIsLoadingScreen(false);
       },
     });
 
@@ -33,67 +23,42 @@ export default function SplashScreen({ children }: SplashScreenProps) {
       ],
       delay: anime.stagger(200, { grid: [14, 5], from: "center" }),
     });
-
-    // loader.add({
-    //   targets: sloganRef.current,
-    //   keyframes: [
-    //     // up
-    //     { translateY: -40 },
-    //     { translateY: 0 },
-    //     // left
-    //     { translateX: -20 },
-    //     { translateX: 0 },
-    //     // right
-    //     { translateX: 20 },
-    //     { translateX: 0 },
-    //     // down
-    //     { translateY: 20 },
-    //     { translateY: 0 },
-    //   ],
-
-    //   scale: {
-    //     value: 1,
-    //     duration: 1000,
-    //     delay: 0,
-    //     easing: "easeInOutQuad",
-    //   },
-
-    //   duration: 5000,
-    //   easing: "easeOutElastic(1, .8)",
-    //   loop: true,
-    // });
-  }, [push]);
+  };
 
   useEffect(() => {
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    const handleStart = () => {
+      setIsLoadingScreen(true);
+    };
+    const handleComplete = () => {
+      setIsLoadingScreen(false);
+    };
+
+    Router.events.on("routeChangeStart", handleStart);
+    Router.events.on("routeChangeComplete", handleComplete);
+    Router.events.on("routeChangeError", handleStart);
 
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      Router.events.off("routeChangeStart", handleStart);
+      Router.events.off("routeChangeComplete", handleComplete);
+      Router.events.off("routeChangeError", handleStart);
     };
-  }, [handleBeforeUnload]);
+  }, [setIsLoadingScreen]);
 
   useEffect(() => {
-    if (localStorage && localStorage.getItem("isReloading") === "true") {
-      setIsLoading(true);
-      localStorage.removeItem("isReloading");
+    if (isLoadingScreen) {
+      animate();
     }
-    animate();
-  }, [animate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div>
-      {isLoading ? (
-        <div className="flex h-screen items-center justify-center bg-slate-800">
-          <div
-            ref={sloganRef}
-            className="flex h-[250px] w-[250px] items-center justify-center rounded-full bg-background p-16 text-center text-5xl shadow-2xl"
-          >
-            Beta
-          </div>
-        </div>
-      ) : (
-        <>{children}</>
-      )}
+    <div className="flex h-screen items-center justify-center bg-slate-800">
+      <div
+        ref={sloganRef}
+        className="flex h-[250px] w-[250px] items-center justify-center rounded-full bg-background p-16 text-center text-5xl shadow-2xl"
+      >
+        Beta
+      </div>
     </div>
   );
 }

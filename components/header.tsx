@@ -1,9 +1,11 @@
+import Loading from "@/app/(client)/loading";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { Suspense } from "react";
 
 type menuContent = {
   id: number;
@@ -15,8 +17,14 @@ export default function Header() {
   const user: string = "choitrochoi";
   const menuContent: menuContent = [
     {
-      id: 1,
+      id: 0,
       name: "Đăng nhập",
+      router: "",
+    },
+
+    {
+      id: 1,
+      name: "Thông tin cá nhân",
       router: "",
     },
   ];
@@ -26,27 +34,28 @@ export default function Header() {
       <div className="flex justify-end">
         <HoverCard openDelay={1}>
           <HoverCardTrigger>
-            <div className="flex cursor-pointer items-center gap-2">
-              <div className="text-white">{user}</div>
-              <Avatar>
-                <AvatarImage src="https://placehold.co/400" />
-                <AvatarFallback>avatar</AvatarFallback>
-              </Avatar>
-            </div>
+            <Suspense fallback={<Loading />}>
+              <div className="flex cursor-pointer items-center gap-2">
+                <div className="text-white">{user}</div>
+                <Avatar>
+                  <AvatarImage src="https://placehold.co/400" />
+                  <AvatarFallback>avatar</AvatarFallback>
+                </Avatar>
+              </div>
+            </Suspense>
           </HoverCardTrigger>
 
-          {menuContent.map((item) => (
-            <HoverCardContent
-              className="cursor-pointer p-2"
-              key={item.id}
-              align="end"
-              sideOffset={10}
-            >
-              <div className="rounded-sm p-2 hover:bg-slate-200">
+          <HoverCardContent
+            className="cursor-pointer p-2"
+            align="end"
+            sideOffset={10}
+          >
+            {menuContent.map((item) => (
+              <div key={item.id} className="rounded-sm p-2 hover:bg-slate-200">
                 {item.name}
               </div>
-            </HoverCardContent>
-          ))}
+            ))}
+          </HoverCardContent>
         </HoverCard>
       </div>
     </div>
